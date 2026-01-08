@@ -1,16 +1,22 @@
 import * as React from "react";
 import styles from "./DashboardProyectos.module.scss";
 import { IDashboardProyectosProps } from "./IDashboardProyectosProps";
-import { IDashboardProyectosState } from "./IDashboardProyectosState";
+import {
+  IDashboardProyectosState,
+  IProyectoDashboard,
+} from "./IDashboardProyectosState";
 import { ProyectosService } from "../../../servicios/data/ProyectosService";
-import { IProyecto } from "../../../modelos/Proyecto";
+import { TareasService } from "../../../servicios/data/TareasService";
 import Spinner from "../../../componentes/spinner/Spinner";
+import ProyectoCard from "../../../componentes/ProyectoCard/ProyectoCard";
+import BuscadorProyectos from "../../../componentes/buscadorProyectos/BuscadorProyectos";
 
 export default class DashboardProyectos extends React.Component<
   IDashboardProyectosProps,
   IDashboardProyectosState
 > {
   private proyectoService: ProyectosService;
+  private tareasService: TareasService;
 
   constructor(props: IDashboardProyectosProps) {
     super(props);
@@ -19,18 +25,31 @@ export default class DashboardProyectos extends React.Component<
       proyectos: [],
       loading: true,
       error: null,
+      textoBusqueda: "",
     };
 
     this.proyectoService = new ProyectosService(this.props.context);
+    this.tareasService = new TareasService(this.props.context);
   }
 
   public async componentDidMount(): Promise<void> {
     try {
-      const proyectos: IProyecto[] =
-        await this.proyectoService.obtenerProyectos();
+      const proyectos = await this.proyectoService.obtenerProyectos();
+
+      const proyectosDashboard: IProyectoDashboard[] = await Promise.all(
+        proyectos.map(async (proyecto) => {
+          const resumen =
+            await this.tareasService.obtenerResumenPorProyecto(proyecto.id);
+
+          return {
+            ...proyecto,
+            resumen,
+          };
+        })
+      );
 
       this.setState({
-        proyectos,
+        proyectos: proyectosDashboard,
         loading: false,
         error: null,
       });
@@ -43,8 +62,12 @@ export default class DashboardProyectos extends React.Component<
     }
   }
 
+  private onBuscarProyecto = (texto: string): void => {
+    this.setState({ textoBusqueda: texto });
+  };
+
   public render(): React.ReactElement<IDashboardProyectosProps> {
-    const { proyectos, loading, error } = this.state;
+    const { proyectos, loading, error, textoBusqueda } = this.state;
 
     if (loading) {
       return <Spinner />;
@@ -54,22 +77,38 @@ export default class DashboardProyectos extends React.Component<
       return <div className={styles.errorMessage}>{error}</div>;
     }
 
+    const texto = textoBusqueda.toLowerCase();
+
+    const proyectosFiltrados = proyectos.filter(
+      (p) => p.nombre.toLowerCase().indexOf(texto) !== -1
+    );
+
     return (
       <div className={styles.dashboardProyectos}>
         <h2 className={styles.title}>Dashboard de Proyectos</h2>
 
-        {proyectos.length === 0 ? (
+        {/* Barra de herramientas */}
+        <div className={styles.toolbar}>
+          <BuscadorProyectos
+            valor={textoBusqueda}
+            onBuscar={this.onBuscarProyecto}
+          />
+        </div>
+
+        {proyectosFiltrados.length === 0 ? (
           <div className={styles.emptyMessage}>
             No hay proyectos para mostrar
           </div>
         ) : (
-          <ul className={styles.projectList}>
-            {proyectos.map((proyecto) => (
-              <li key={proyecto.id} className={styles.projectItem}>
-                <strong>{proyecto.nombre}</strong> – {proyecto.estado}
-              </li>
+          <div className={styles.projectGrid}>
+            {proyectosFiltrados.map((proyecto) => (
+              <ProyectoCard
+                key={proyecto.id}
+                proyecto={proyecto}
+                resumen={proyecto.resumen}
+              />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     );

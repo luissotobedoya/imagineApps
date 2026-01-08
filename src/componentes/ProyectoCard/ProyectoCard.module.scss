@@ -1,0 +1,87 @@
+.card {
+    border: 1px solid #edebe9;
+    border-radius: 8px;
+    padding: 16px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.blocked {
+    border-left: 4px solid #d13438;
+  }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 16px;
+    margin: 0;
+}
+
+.estado {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.info {
+    font-size: 13px;
+}
+
+.progressContainer {
+    margin-top: 8px;
+}
+
+.progressInfo {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.progressBar {
+    height: 8px;
+    background: #edebe9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: #0078d4;
+    transition: width 0.3s ease;
+}
+
+.indicators {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badgeBlocked {
+    background: #d13438;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+.badgeLow {
+    background: #ffb900;
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+.badgeHigh {
+    background: #107c10;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
