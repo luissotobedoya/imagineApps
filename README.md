@@ -17,6 +17,12 @@ Adjunto mi prueba técnica correspondiente al desarrollo del WebPart en SharePoi
 
 ![Formato Tareas](./src/assets/tareas.png)
 
+![Flujos](./src/assets/flujos.png)
+
+![Flujo 1](./src/assets/flujo1.png)
+
+![Flujo 2](./src/assets/flujo2.png)
+
 ### 📋 Listas de SharePoint
 
 - **Lista de Proyectos**  
