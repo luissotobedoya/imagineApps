@@ -138,7 +138,6 @@ export default class DashboardProyectos extends React.Component<
       <div className={styles.dashboardProyectos}>
         <h2 className={styles.title}>Dashboard de Proyectos</h2>
 
-        {/* Barra de herramientas */}
         <div className={styles.toolbar}>
           <BuscadorProyectos
             valor={textoBusqueda}
