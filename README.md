@@ -13,6 +13,10 @@ Adjunto mi prueba técnica correspondiente al desarrollo del WebPart en SharePoi
 ### 🖼️ Evidencia Visual
 ![Vista del WebPart](./src/assets/image.png)
 
+![Formato Proyectos](./src/assets/proyectos.png)
+
+![Formato Tareas](./src/assets/tareas.png)
+
 ### 📋 Listas de SharePoint
 
 - **Lista de Proyectos**  
