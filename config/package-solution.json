@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "project-dashboard-web-part-client-side-solution",
+    "id": "18b6e503-0635-44d1-a768-bb5cffba7c3b",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.16.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "ProjectDashboardWebPart description"
+      },
+      "longDescription": {
+        "default": "ProjectDashboardWebPart description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "project-dashboard-web-part Feature",
+        "description": "The feature that activates elements of the project-dashboard-web-part solution.",
+        "id": "11e4b447-6b98-4241-a151-076035cbb199",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/project-dashboard-web-part.sppkg"
+  }
+}
