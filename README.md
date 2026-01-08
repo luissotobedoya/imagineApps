@@ -11,7 +11,7 @@ Adjunto mi prueba técnica correspondiente al desarrollo del WebPart en SharePoi
   https://s0660.sharepoint.com/sites/ImagineApps
 
 ### 🖼️ Evidencia Visual
-![Vista del WebPart](./image.png)
+![Vista del WebPart](./assets/image.png)
 
 ### 📋 Listas de SharePoint
 
