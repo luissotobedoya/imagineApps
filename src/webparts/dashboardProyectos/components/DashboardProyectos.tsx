@@ -9,7 +9,8 @@ import { ProyectosService } from "../../../servicios/data/ProyectosService";
 import { TareasService } from "../../../servicios/data/TareasService";
 import Spinner from "../../../componentes/spinner/Spinner";
 import ProyectoCard from "../../../componentes/ProyectoCard/ProyectoCard";
-import BuscadorProyectos from "../../../componentes/buscadorProyectos/BuscadorProyectos";
+import BuscadorProyectos from "../../../componentes/BuscadorProyectos/BuscadorProyectos";
+import FiltroProyectos from "../../../componentes/FiltroProyectos/FiltroProyectos";
 
 export default class DashboardProyectos extends React.Component<
   IDashboardProyectosProps,
@@ -25,7 +26,11 @@ export default class DashboardProyectos extends React.Component<
       proyectos: [],
       loading: true,
       error: null,
+
       textoBusqueda: "",
+      estadoSeleccionado: "Todos",
+      gerenteSeleccionado: "Todos",
+      gerentesDisponibles: [],
     };
 
     this.proyectoService = new ProyectosService(this.props.context);
@@ -38,8 +43,9 @@ export default class DashboardProyectos extends React.Component<
 
       const proyectosDashboard: IProyectoDashboard[] = await Promise.all(
         proyectos.map(async (proyecto) => {
-          const resumen =
-            await this.tareasService.obtenerResumenPorProyecto(proyecto.id);
+          const resumen = await this.tareasService.obtenerResumenPorProyecto(
+            proyecto.id
+          );
 
           return {
             ...proyecto,
@@ -48,8 +54,21 @@ export default class DashboardProyectos extends React.Component<
         })
       );
 
+      const gerentesDisponibles: string[] = [];
+
+      proyectosDashboard.forEach((p) => {
+        if (
+          p.gerente &&
+          p.gerente.trim() !== "" &&
+          gerentesDisponibles.indexOf(p.gerente) === -1
+        ) {
+          gerentesDisponibles.push(p.gerente);
+        }
+      });
+
       this.setState({
         proyectos: proyectosDashboard,
+        gerentesDisponibles,
         loading: false,
         error: null,
       });
@@ -62,12 +81,36 @@ export default class DashboardProyectos extends React.Component<
     }
   }
 
+  /* =========================
+     Eventos
+  ========================== */
+
   private onBuscarProyecto = (texto: string): void => {
     this.setState({ textoBusqueda: texto });
   };
 
+  private onEstadoChange = (estado: string): void => {
+    this.setState({ estadoSeleccionado: estado });
+  };
+
+  private onGerenteChange = (gerente: string): void => {
+    this.setState({ gerenteSeleccionado: gerente });
+  };
+
+  /* =========================
+     Render
+  ========================== */
+
   public render(): React.ReactElement<IDashboardProyectosProps> {
-    const { proyectos, loading, error, textoBusqueda } = this.state;
+    const {
+      proyectos,
+      loading,
+      error,
+      textoBusqueda,
+      estadoSeleccionado,
+      gerenteSeleccionado,
+      gerentesDisponibles,
+    } = this.state;
 
     if (loading) {
       return <Spinner />;
@@ -79,9 +122,17 @@ export default class DashboardProyectos extends React.Component<
 
     const texto = textoBusqueda.toLowerCase();
 
-    const proyectosFiltrados = proyectos.filter(
-      (p) => p.nombre.toLowerCase().indexOf(texto) !== -1
-    );
+    const proyectosFiltrados = proyectos.filter((p) => {
+      const cumpleTexto = p.nombre.toLowerCase().indexOf(texto) !== -1;
+
+      const cumpleEstado =
+        estadoSeleccionado === "Todos" || p.estado === estadoSeleccionado;
+
+      const cumpleGerente =
+        gerenteSeleccionado === "Todos" || p.gerente === gerenteSeleccionado;
+
+      return cumpleTexto && cumpleEstado && cumpleGerente;
+    });
 
     return (
       <div className={styles.dashboardProyectos}>
@@ -92,6 +143,16 @@ export default class DashboardProyectos extends React.Component<
           <BuscadorProyectos
             valor={textoBusqueda}
             onBuscar={this.onBuscarProyecto}
+          />
+        </div>
+
+        <div>
+          <FiltroProyectos
+            estadoSeleccionado={estadoSeleccionado}
+            gerenteSeleccionado={gerenteSeleccionado}
+            gerentesDisponibles={gerentesDisponibles}
+            onEstadoChange={this.onEstadoChange}
+            onGerenteChange={this.onGerenteChange}
           />
         </div>
 

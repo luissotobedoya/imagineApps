@@ -7,7 +7,15 @@ export interface IProyectoDashboard extends IProyecto {
 
 export interface IDashboardProyectosState {
   proyectos: IProyectoDashboard[];
+
   loading: boolean;
   error: string | null;
+
+  /* Búsqueda */
   textoBusqueda: string;
+
+  /* Filtros */
+  estadoSeleccionado: string; 
+  gerenteSeleccionado: string;  
+  gerentesDisponibles: string[]; 
 }
